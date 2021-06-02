@@ -38,6 +38,9 @@ jobs:
                 title: 'Open PRs'
                 color: 'green'
 
+      - name: tree
+        run: tree -I .git
+        
       - name: publish
         run: |
           git add .
