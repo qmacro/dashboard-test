@@ -1,1 +1,1 @@
-☞ https://qmacro.org/dashboard-test/
+☞ https://qmacro.org/github-dashboard/
