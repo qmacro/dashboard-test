@@ -113,8 +113,8 @@ jobs:
       - name: publish
         run: |
           git add .
-          git config user.name 'Dashboard Generator'
-          git config user.email 'dashboard@example.com'
+          git config user.name 'qmacro dashboard generator'
+          git config user.email 'qmacro-dashboard@example.com'
           git commit -m 'dashboard update' --allow-empty
           git push origin gh-pages
         working-directory: out
