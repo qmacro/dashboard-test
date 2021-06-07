@@ -19,7 +19,7 @@ jobs:
             title: 'Test Title'
             output:
               format: html
-              filename: 'out/index.html'
+              filename: 'index.html'
             sections:
             - title: 'Developer Keynote'
               description: 'Open Issues and PRs'
