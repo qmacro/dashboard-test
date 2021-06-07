@@ -1,35 +1,120 @@
-name: Build Dashboard
+name: Build dashboard
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: generate
+      - name: Check out GitHub Pages branch
+        uses: actions/checkout@v2
+        with:
+          ref: 'gh-pages'
+          path: 'out'
+
+      - name: Open Documentation Initiative
         uses: ethomson/issue-dashboard@v1
         with:
           token: ${{ github.token }}
           config: |
-            title: 'Test Title'
+            title: 'Open Documentation Initiative'
+            description: 'All contributions earning SAP Community badges'
             output:
               format: html
-              filename: 'index.html'
+              filename: 'out/open-documentation-initiative.html'
             sections:
-            - title: 'Developer Keynote'
-              description: 'Open Issues and PRs'
+            - title: 'SAP Business Application Studio'
+              description: 'SAP-docs/btp-business-application-studio'
               widgets:
               - type: number
-                issue_query: 'repo:SAP-samples/teched2020-developer-keynote is:issue is:open'
-                title: 'Open Issues'
-                color: 'red'
+                issue_query: 'repo:SAP-docs/btp-business-application-studio is:issue state:closed label:contribution -author:qmacro'
+                title: 'Feedback Provision'
+                color: 'Green'
               - type: number
-                issue_query: 'repo:SAP-samples/teched2020-developer-keynote is:pr is:open'
-                title: 'Open PRs'
-                color: 'green'
+                issue_query: 'repo:SAP-docs/btp-business-application-studio is:pr state:closed label:contribution -author:qmacro'
+                title: 'Content Contribution'
+                color: 'Green'
+            - title: 'Contribution Guidelines'
+              description: 'SAP-docs/contribution-guidelines'
+              widgets:
+              - type: number
+                issue_query: 'repo:SAP-docs/contribution-guidelines is:issue state:closed label:contribution -author:qmacro'
+                title: 'Feedback Provision'
+                color: 'Green'
+              - type: number
+                issue_query: 'repo:SAP-docs/contribution-guidelines is:pr state:closed label:contribution -author:qmacro'
+                title: 'Content Contribution'
+                color: 'Green'
 
+      - name: Developer Advocates SAP-samples
+        uses: ethomson/issue-dashboard@v1
+        with:
+          token: ${{ github.token }}
+          config: |
+            title: SAP-samples Repositories
+            description: Related to SAP Developer Advocates
+            output:
+              format: html
+              filename: 'out/developer-advocates.html'
+            sections:
+            - title: Developer Keynote
+              widgets:
+              - type: number
+                issue_query: 'repo:SAP-samples/teched2020-developer-keynote is:issue state:open'
+                title: Open Issues
+                color: red
+              - type: number
+                issue_query: 'repo:SAP-samples/teched2020-developer-keynote is:pr state:open'
+                title: Open PRs
+                color: green
+              - type: graph
+                title: Issues by age
+                elements:
+                - title: '10 days'
+                  issue_query: 'repo:SAP-samples/teched2020-developer-keynote state:open is:issue created:>{{ date("-10 days") }}'
+                  color: green
+                - title: 30 days
+                  issue_query: 'repo:SAP-samples/teched2020-developer-keynote state:open is:issue created:{{ date("-30 days") }}..{{ date("-10 days") }}'
+                  color: yellow
+                - title: 30+ days
+                  issue_query: 'repo:SAP-samples/teched2020-developer-keynote state:open is:issue created:<{{ date("-30 days") }}'
+                  color: red
+            - title: Devtoberfest 2020
+              widgets:
+              - type: number
+                issue_query: 'repo:SAP-samples/sap-devtoberfest-2020 is:issue state:open'
+                title: Open Issues
+                color: red
+              - type: number
+                issue_query: 'repo:SAP-samples/sap-devtoberfest-2020 is:pr state:open'
+                title: Open PRs
+                color: green
+              - type: graph
+                title: Issues by age
+                elements:
+                - title: '10 days'
+                  issue_query: 'repo:SAP-samples/sap-devtoberfest-2020 state:open is:issue created:>{{ date("-10 days") }}'
+                  color: green
+                - title: 30 days
+                  issue_query: 'repo:SAP-samples/sap-devtoberfest-2020 state:open is:issue created:{{ date("-30 days") }}..{{ date("-10 days") }}'
+                  color: yellow
+                - title: 30+ days
+                  issue_query: 'repo:SAP-samples/sap-devtoberfest-2020 state:open is:issue created:<{{ date("-30 days") }}'
+                  color: red
+
+      - name: publish
+        run: |
+          git add .
+          git config user.name 'Dashboard Generator'
+          git config user.email 'dashboard@example.com'
+          git commit -m 'dashboard update' --allow-empty
+          git push origin gh-pages
+        working-directory: out

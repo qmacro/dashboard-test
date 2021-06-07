@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+act workflow_dispatch \
+  --bind \
+  --platform ubuntu-latest=qmacro/ubuntu:full-20.04 \
+  --job build \
+  --secret GITHUB_TOKEN="$GITHUB_TOKEN"
