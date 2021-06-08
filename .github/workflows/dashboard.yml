@@ -20,7 +20,7 @@ jobs:
           ref: 'gh-pages'
           path: 'out'
 
-      - name: Open Documentation Initiative
+      - name: Open Documentation Initiative - SAP Community badges
         uses: ethomson/issue-dashboard@v1
         with:
           token: ${{ github.token }}
@@ -29,7 +29,7 @@ jobs:
             description: 'All contributions earning SAP Community badges'
             output:
               format: html
-              filename: 'out/open-documentation-initiative.html'
+              filename: 'out/open-documentation-initiative-badges.html'
             sections:
             - title: 'SAP Business Application Studio'
               description: 'SAP-docs/btp-business-application-studio'
@@ -53,6 +53,40 @@ jobs:
                 issue_query: 'repo:SAP-docs/contribution-guidelines is:pr state:closed label:contribution -author:qmacro'
                 title: 'Content Contribution'
                 color: 'Green'
+
+      - name: Open Documentation Initiative - Open issues and PRs
+        uses: ethomson/issue-dashboard@v1
+        with:
+          token: ${{ github.token }}
+          config: |
+            title: Open Documentation Initiative
+            description: Open issues and PRs
+            output:
+              format: html
+              filename: 'out/open-documentation-initiative-issues-prs.html'
+            sections:
+            - title: SAP Business Application Studio
+              description: SAP-docs/btp-business-application-studio
+              widgets:
+              - type: number
+                issue_query: 'repo:SAP-docs/btp-business-application-studio is:issue state:open'
+                title: Open Issues
+                color: blue
+              - type: number
+                issue_query: 'repo:SAP-docs/btp-business-application-studio is:pr state:open'
+                title: Open PRs
+                color: blue
+            - title: Contribution Guidelines
+              description: SAP-docs/contribution-guidelines
+              widgets:
+              - type: number
+                issue_query: 'repo:SAP-docs/contribution-guidelines is:issue state:open'
+                title: Open Issues
+                color: blue
+              - type: number
+                issue_query: 'repo:SAP-docs/contribution-guidelines is:pr state:open'
+                title: Open PRs
+                color: blue
 
       - name: Developer Advocates SAP-samples
         uses: ethomson/issue-dashboard@v1
